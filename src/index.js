@@ -7,6 +7,10 @@ const handlebars = require('express-handlebars');
 const methodOverride = require('method-override');
 const flash = require('connect-flash');
 const fs = require('fs');
+const cors = require('cors');
+const mongoose = require('mongoose');
+const MongoStore = require('connect-mongo');
+
 
 const session = require('express-session');
 const passport = require('passport');
@@ -21,12 +25,14 @@ db.connect();
 const app = express();
 const port = process.env.PORT || 3000;
 
+
 const route = require('./routes');  
 
 sessionMiddleware=session({
     secret: process.env.MY_SECRET_KEY,
     resave: false,
     saveUninitialized: false,
+    store: MongoStore.create({ client: mongoose.connection.getClient() }),
     cookie: {
         httpOnly: true,
         secure: false, // Chỉ dùng với HTTPS
@@ -39,6 +45,7 @@ app.use(sessionMiddleware);
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
+app.use(cors());
 
 // Make flash messages available in templates
 app.use((req, res, next) => {

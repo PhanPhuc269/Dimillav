@@ -1,9 +1,5 @@
 const { mutipleMongooseToObject } = require('@utils/mongoose');
-const { mongooseToObject } = require('@utils/mongoose');
-const session = require('express-session');
-const Product = require("@components/product/models/Product");
 const ProductService = require('../../product/services/ProductService');
-
 class HomeController {
     async home(req, res, next) {
         try {

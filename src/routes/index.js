@@ -10,6 +10,8 @@ const orderRouter=require('../components/order/orderRoute');
 const settingRouter=require('../components/setting/settingRoute');
 const reviewRoutes = require('../components/review/reviewRoutes');
 const transactionRouter=require('../components/transaction/transactionRoute');
+const notifyRouter=require('../components/notify/notifyRoute');
+
 function router(app)
 {
    app.use('/', authRouter);
@@ -24,6 +26,7 @@ function router(app)
    app.use('/setting', settingRouter);
    app.use('/reviews', reviewRoutes);
    app.use('/transaction', transactionRouter);
+   app.use('/notify', notifyRouter);
 
 }
 

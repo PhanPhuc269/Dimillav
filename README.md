@@ -15,8 +15,8 @@
 1. **Clone Repository**
 
     ```bash
-    git clone https://github.com/PhanPhuc269/GA06.git
-    cd GA06
+    git clone https://github.com/PhanPhuc269/Dimillav.git
+    cd Dimillav
     ```
 
 2. **Cài đặt Các dependencies**
@@ -67,7 +67,7 @@
 
         3. **Nhập URL Repository:**
         
-            Nhập URL của repository GitHub: `https://github.com/PhanPhuc269/GA06.git` và nhấn "OK".
+            Nhập URL của repository GitHub: `https://github.com/PhanPhuc269/Dimillav.git` và nhấn "OK".
 
         4. **Cấu hình Biến Môi trường:**
         

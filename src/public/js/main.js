@@ -589,12 +589,69 @@ $(document).ready(function(){
       } else {
           deleteSearchBtn.style.display = 'none'; // Ẩn nút delete
       }
-  });
-
-  // Lắng nghe sự kiện click trên nút delete để xóa dữ liệu trong ô input
-  deleteSearchBtn.addEventListener('click', function() {
+    });
+    
+    // Lắng nghe sự kiện click trên nút delete để xóa dữ liệu trong ô input
+    deleteSearchBtn.addEventListener('click', function() {
       searchInput.value = '';
       deleteSearchBtn.style.display = 'none'; // Ẩn nút delete
-  });
- });
+    });
+    
+  // Khóa public VAPID (thay YOUR_PUBLIC_KEY bằng khóa VAPID của bạn)
+  const publicVapidKey = 'BIkKFa3E0LgzLXJPMT0w1mY9zbxyoE3kENb-CoRbDvKNyd91RO7cGT-7We0fXQQO2n4UaSWvbcEnx06X9PImWW8';
+
+  // Hàm chuyển đổi Base64 VAPID Key sang Uint8Array
+  function urlBase64ToUint8Array(base64String) {
+      const padding = '='.repeat((4 - (base64String.length % 4)) % 4);
+      const base64 = (base64String + padding)
+          .replace(/-/g, '+')
+          .replace(/_/g, '/');
+      const rawData = window.atob(base64);
+      return Uint8Array.from([...rawData].map((char) => char.charCodeAt(0)));
+  }
+
+  // Đăng ký Service Worker và Push Notification
+  if ('serviceWorker' in navigator && 'PushManager' in window) {
+      console.log('Service Worker và Push Notifications được hỗ trợ.');
+
+      // Đăng ký Service Worker
+      navigator.serviceWorker.register('/js/sw.js')
+          .then((registration) => {
+              console.log('Service Worker đã được đăng ký:', registration);
+
+              // Đăng ký Push Notification
+              return registration.pushManager.subscribe({
+                  userVisibleOnly: true,
+                  applicationServerKey: urlBase64ToUint8Array(publicVapidKey),
+              });
+          })
+          .then(async (subscription) => {
+              console.log('Push Subscription đã được tạo:', subscription);
+
+              // Gửi subscription lên server
+              const response = await fetch('notify/subscribe', {
+                  method: 'POST',
+                  body: JSON.stringify(subscription),
+                  headers: {
+                      'Content-Type': 'application/json',
+                  },
+              });
+
+              if (response.ok) {
+                  console.log('Subscription đã được gửi lên server thành công!');
+              } else {
+                  console.error('Lỗi khi gửi subscription lên server:', response.statusText);
+              }
+          })
+          .catch((error) => {
+              console.error('Lỗi khi đăng ký Service Worker hoặc Push Notifications:', error);
+          });
+  } else {
+      console.error('Service Worker hoặc Push Notifications không được hỗ trợ trên trình duyệt này.');
+  }
+
+
+
+
+});
 
