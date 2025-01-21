@@ -1,0 +1,75 @@
+<div class="review_section">
+  <div class="row total_rate mb-4">
+    <div class="col-6">
+      <div class="box_total">
+        <h5>Overall</h5>
+        <h4>{{overallRating}}</h4>
+        <h6>({{totalReviews}} Reviews)</h6>
+      </div>
+    </div>
+    <div class="col-6">
+      <div class="rating_list">
+        <h3>Based on {{totalReviews}} Reviews</h3>
+        <ul class="list">
+        {{#each ratingBreakdown}}
+            <li>
+            <a href="#">
+                {{@key}} Star
+                {{#each (range 1 5)}}
+                <i class="fa {{ternary (lte this (toNumber @../key)) 'fa-star checked' 'fa-star-o'}}"></i>
+                {{/each}}
+                {{count}}
+            </a>
+            </li>
+        {{/each}}
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="review_list" id="review-list" data-product-id="{{product._id}}">
+    {{#each reviews}}
+      <div class="review_item mb-4">
+        <div class="media">
+          <div class="media-body ml-3">
+            <h4>{{this.userId.username}}</h4>
+            <div class="rating mb-2">
+              {{#each (range 1 5)}}
+                <i class="fa {{ternary (lte this ../rating) 'fa-star checked' 'fa-star-o'}}"></i>
+              {{/each}}
+            </div>
+          </div>
+        </div>
+        <p>{{this.comment}}</p>
+      </div>
+    {{/each}}
+  </div>
+
+  <nav aria-label="Review pagination">
+    <ul class="pagination">
+      {{#if (gt reviewPagination.currentPage 1)}}
+        <li class="page-item">
+          <a class="page-link" href="#" data-page="{{sub reviewPagination.currentPage 1}}" aria-label="Previous">
+            <span aria-hidden="true">«</span>
+          </a>
+        </li>
+      {{/if}}
+
+      {{#each (range 1 reviewPagination.totalPages)}}
+        <li class="page-item {{#if (eq this ../reviewPagination.currentPage)}}active{{/if}}">
+          <a class="page-link" href="#" data-page="{{this}}">{{this}}</a>
+        </li>
+      {{/each}}
+
+      {{#if (lt reviewPagination.currentPage reviewPagination.totalPages)}}
+        <li class="page-item">
+          <a class="page-link" href="#" data-page="{{add reviewPagination.currentPage 1}}" aria-label="Next">
+            <span aria-hidden="true">»</span>
+          </a>
+        </li>
+      {{/if}}
+    </ul>
+  </nav>
+</div>
+<script src="/js/review/review"></script>
+<script src="/js/review/review-pagination"></script>

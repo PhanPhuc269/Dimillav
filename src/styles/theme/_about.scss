@@ -1,0 +1,80 @@
+/* Hiệu ứng đổi màu khi di chuột vào card */
+.card:hover {
+  background: linear-gradient(90deg, #ff8c00, #ffa500);
+  color: white;
+  transform: translateY(-5px); /* Nhẹ nhàng nổi lên khi hover */
+  transition: all 0.3s ease;
+}
+
+.card:hover .card-title,
+.card:hover .card-text,
+.card:hover p {
+  color: white; /* Đổi màu văn bản sang màu trắng khi hover */
+}
+
+.card:hover img {
+  filter: brightness(
+    90%
+  ); /* Giảm độ sáng của hình ảnh để làm nổi bật hiệu ứng */
+}
+
+.card {
+  border-radius: 15px; /* Bo tròn các góc của card */
+  overflow: hidden; /* Ẩn các phần tử tràn ra ngoài */
+}
+
+.card-body {
+  padding: 20px; /* Tăng khoảng cách padding */
+}
+
+.card-title {
+  font-size: 1.25rem; /* Tăng kích thước font của tiêu đề */
+}
+
+.card-text {
+  font-size: 1rem; /* Tăng kích thước font của văn bản */
+}
+.avt-member {
+  width: 150px;
+}
+
+/* Blockquote Styling */
+.blockquote {
+    border-left: 5px solid #ccc;
+    padding: 20px;
+    margin: 20px 0;
+    background: #f9f9f9;
+    position: relative;
+    font-style: italic;
+    color: #555;
+}
+
+.blockquote::before {
+    content: "\201C";
+    font-size: 4em;
+    position: absolute;
+    left: 10px;
+    top: -10px;
+    color: #ccc;
+}
+
+.blockquote p {
+    margin: 0;
+    padding-left: 40px;
+}
+
+/* Animation */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translate3d(0, 40px, 0);
+    }
+    to {
+        opacity: 1;
+        transform: translate3d(0, 0, 0);
+    }
+}
+
+.animate__fadeInUp {
+    animation: fadeInUp 1s ease-out;
+}

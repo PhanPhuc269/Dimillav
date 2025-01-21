@@ -1,0 +1,39 @@
+<div class="review_box">
+    <h4>Add a Review</h4>
+    <p>Your Rating:</p>
+    <ul class="list">
+        {{#each (range 1 5)}}
+            <li>
+                <a onclick="selectRating({{this}})">
+                    <i class="fa fa-star{{#if (lte this ../selectedRating)}} checked{{/if}}"></i>
+                </a>
+            </li>
+        {{/each}}
+    </ul>
+    <p id="selected-rating">Star</p> 
+    <form class="row contact_form"  method="POST" id="reviewForm" novalidate="novalidate">
+        <input type="hidden" name="rating" value="0"> 
+        <input type="hidden" name="productId" value="{{productId}}">
+        <input type="hidden" name="slug" value="{{slug}}">
+        
+
+        <div class="col-md-12">
+            <div class="form-group">
+                <textarea class="form-control" name="comment" id="comment" rows="3" placeholder="Your Review" required {{#unless user}}disabled{{/unless}}></textarea>
+            </div>
+        </div>
+        <div class="col-md-12 text-right">
+            <button type="submit" class="primary-btn" {{#unless user}}disabled {{/unless}}>
+                Add Review
+            </button>
+            {{#unless user}}
+                <p>Please <a href="/login">log in</a> to add a review.</p>
+            {{/unless}}
+        </div>
+    </form>
+</div>
+
+<script src="/js/review/reviewForm.js">
+  
+</script>
+

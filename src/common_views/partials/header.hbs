@@ -1,0 +1,76 @@
+<!-- Start Header Area -->
+	<header class="header_area sticky-header">
+
+		<div class="main_menu">
+					<!-- Small Navigation Tabs -->
+			<div class="top_nav navbar navbar-expand-lg navbar-light main_box">
+				<div class="container d-flex justify-content-between">
+					<ul class="nav">
+						
+					</ul>
+					<ul class="nav">
+						<li class="nav-item "><a href="/" class="nav-link">Home</a></li>
+						<li class="nav-item "><a href="/product/search" class="nav-link">Products</a></li>
+						{{!-- <li class="nav-item "><a href="/blog" class="nav-link">Blog</a></li> --}}
+						<li class="nav-item "><a href="/about"class="nav-link">About</a></li>
+						<li class="nav-item "><a href="/contact"class="nav-link">Contact</a></li>
+						{{#if isAuthenticated}}
+							<li class="nav-item submenu dropdown">
+								<a href="#" class="nav-link dropdown-toggle text-normal-case" data-toggle="dropdown" role="button" aria-haspopup="true"
+								aria-expanded="false"><img class="avatar" src="{{user.avatar}}"></img>{{user.username}}</a>
+								<ul class="dropdown-menu avatar-dropdown ">
+									<li class="nav-item"><a class="nav-link" href="/setting/edit-profile">My account</a></li>
+									<li class="nav-item"><a class="nav-link" href="/order/list">Theo dõi đơn hàng</a></li>	
+									<li class="nav-item"><a class="nav-link" href="/logout">Log out</a></li>
+								</ul>
+							</li>
+						{{else}}
+							<li class="nav-item"><a class="nav-link" href="/login">Login</a></li>
+							<li class="nav-item"><a class="nav-link" href="/registration">Register</a></li>
+						{{/if}}
+					</ul>
+				</div>
+			</div>
+			<nav class="navbar navbar-expand-lg navbar-light main_box">
+				<div class="container p-1">
+					<!-- Brand and toggle get grouped for better mobile display -->
+					<a class="navbar-brand logo_h" href="/"><img src="/img/logo.png" alt="" class="logo"></a>
+					<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+					 aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+					</button>
+					<!-- Collect the nav links, forms, and other content for toggling -->
+					<div class="collapse navbar-collapse offset" id="navbarSupportedContent">
+						<div class="d-flex align-items-center justify-content-between w-100">
+							<form class="d-flex align-items-center w-100" action="/product/search" method="get" id="searchForm">
+								<input type="text" class="form-control w-100 search-input" id="search_input" name="keyword" placeholder="Search in Dimillav">
+								    <div id="search-history-container" class="search-history"></div> <!-- Lịch sử tìm kiếm -->
+
+								<button type="submit" class="btn">
+									<span class="lnr lnr-magnifier" id="search"></span>
+								</button>
+								<span class="lnr lnr-cross close-btn" id="delete_search" title="Delete Search"></span>
+							</form>
+							<div class="cart-container position-relative ml-3">
+								<a href="/cart" class="cart-link">
+									<span class="fa fa-shopping-cart" style="font-size: 24px;"></span>
+								</a>
+								<span id="cart-count" class="badge badge-danger position-absolute">0</span>
+							</div>
+						</div>
+					</div>
+
+				</div>
+			</nav>
+		</div>
+		
+
+
+	</header>
+	  <script src="/js/cart/cart.js" defer></script>
+	    <script src="/js/cart/cart-counter.js" defer></script>
+			    <script src="/js/searchHistory.js" defer></script>
+
+	<!-- End Header Area -->

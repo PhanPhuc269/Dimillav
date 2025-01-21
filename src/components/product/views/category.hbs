@@ -1,0 +1,264 @@
+
+
+
+<body id="category">
+    <!-- Start Banner Area -->
+    <section class="banner-area organic-breadcrumb">
+        <div class="container">
+            <div class="breadcrumb-banner d-flex flex-wrap align-items-center justify-content-end">
+                <!-- Content here -->
+            </div>
+        </div>
+    </section>
+    <!-- End Banner Area -->
+    <div class="container">
+        <div class="row">
+            <!-- Sidebar Filters -->
+            <aside class="col-xl-3 col-lg-4 col-md-5">
+                <div class="sidebar-categories">
+                    <div class="head">Categories</div>
+                    <ul class="main-categories">
+                        <li class="main-nav-list ">
+                            <a href="javascript:void(0);" id="all" onclick="setTypeFilter('')">
+                                <span class="lnr lnr-arrow-right"></span>All<span class="number">({{totalAll}})</span>
+                            </a>
+                        </li>
+                        {{#each categories}}
+                        <li class="main-nav-list">
+                            <a data-toggle="collapse" href="#{{slug}}" aria-expanded="false" aria-controls="{{slug}}">
+                                <span class="lnr lnr-arrow-right"></span>{{name}}<span class="number">({{productCount}})</span>
+                            </a>
+                            <ul class="collapse" id="{{slug}}" data-toggle="collapse" aria-expanded="false" aria-controls="{{slug}}">
+                                {{#each subCategories}}
+                                <li class="main-nav-list child" data-type="{{slug}}">
+                                    <a href="javascript:void(0);" id="{{slug}}" onclick="setTypeFilter('{{slug}}')">
+                                        {{name}}<span class="number">({{productCount}})</span>
+                                    </a>
+                                </li>
+                                {{/each}}
+                            </ul>
+                        </li>
+                        {{/each}}
+                    </ul>
+                </div>
+                <div class="sidebar-filter mt-50">
+                    <div class="top-filter-head">Product Filters
+                        <button class="btn btn-icon text-white" id="reset-filter" onclick="resetFilters()" title="Reset Filters">
+                            <span class="lnr lnr-sync"></span>
+                        </button>
+                    </div>
+                    <div class="common-filter">
+                        <div class="head">Brands</div>
+                        <ul>
+                            {{#each brands}}
+                            <li class="filter-list">
+                                <input 
+                                    class="pixel-checkbox" 
+                                    type="checkbox" 
+                                    id="{{this}}" 
+                                    name="brand" 
+                                    value="{{this}}" 
+                                    {{#if (includes ../selectedBrands this)}}checked{{/if}}>
+                                <label for="{{this}}">{{this}}</label>
+                            </li>
+                            {{/each}}
+                        </ul>
+                    </div>
+                    <div class="common-filter">
+                        <div class="head">Color</div>
+                        <form action="#">
+                            <ul>
+                                {{#each colors}}
+                                <li class="filter-list">
+                                    <input 
+                                        class="pixel-checkbox" 
+                                        type="checkbox" 
+                                        id="{{this}}" 
+                                        name="color" 
+                                        value="{{this}}" 
+                                        {{#if (includes ../selectedColors this)}}checked{{/if}}>
+                                    <label for="{{this}}">{{this}}</label>
+                                </li>
+                                {{/each}}
+                            </ul>
+                        </form>
+                    </div>
+                    <div class="common-filter">
+                        <div class="head">Price</div>
+                        <div class="price-range-area">
+                            <div id="price-range"></div>
+                            <div class="value-wrapper d-flex">
+                                <div class="price">Price:</div>
+                                <span>đ</span>
+                                <div id="lower-value"></div>
+                                <div class="to">to</div>
+                                <span>đ</span>
+                                <div id="upper-value"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Product List -->
+            <main class="col-xl-9 col-lg-8 col-md-7">
+                <!-- Start Filter Bar -->
+                <div class="filter-bar d-flex flex-wrap align-items-center">
+                    <div class="sorting">
+                        <select id="sort-criteria" onchange="applySort(this.value)">
+                            <option value="default">Default sorting</option>
+                            <option value="price_asc">Price: Low to High</option>
+                            <option value="price_desc">Price: High to Low</option>
+                            <option value="creation_time_desc">Newest</option>
+                            <option value="rate_desc">Best Rated</option>
+                        </select>
+                    </div>
+                    <div class="sorting mr-auto">
+                        <select id="items-per-page" onchange="updateItemsPerPage(this.value)">
+                            <option value="12">Show 12</option>
+                            <option value="24">Show 24</option>
+                            <option value="36">Show 36</option>
+                        </select>
+                    </div>
+                    <div class="mr-auto">
+                        {{#if totalPages}}
+                            <div class="pagination-info" id="pagination-info">
+                                Page {{currentPage}} of {{totalPages}}
+                            </div>
+                        {{/if}}
+                    </div>
+
+                    <div class="pagination">
+                        {{#if totalPages}}
+                            {{#if (gt currentPage 1)}}
+                                    <a href="#" onclick="changePage({{sub currentPage 1}})" class="prev-arrow"><i class="fa fa-long-arrow-left" aria-hidden="true"></i></a>
+                                {{/if}}
+
+                                {{#if (gt currentPage 3)}}
+                                    <a href="#" onclick="changePage(1)">1</a>
+                                    <span>...</span>
+                                {{/if}}
+
+                                {{#each (createPagination currentPage totalPages 2)}}
+                                    <a href="#" class="{{#ifEquals this ../currentPage}}active{{/ifEquals}}" onclick="changePage({{this}})">{{this}}</a>
+                                {{/each}}
+
+                                {{#if (lt currentPage (sub totalPages 2))}}
+                                    <span>...</span>
+                                    <a href="#" onclick="changePage(totalPages)">{{totalPages}}</a>
+                                {{/if}}
+
+                                {{#if (lt currentPage totalPages)}}
+                                    <a href="#" class="next-arrow" onclick="changePage({{add currentPage 1}})"><i class="fa fa-long-arrow-right" aria-hidden="true"></i></a>
+                                {{/if}}
+                        {{/if}}
+                    </div>
+                </div>
+                <!-- End Filter Bar -->
+
+                <!-- Start Product List -->
+                <section class="lattest-product-area pb-40 category-list">
+                    <div class="row" id="product-list">
+                        {{#each products}}
+                        <div class="col-lg-4 col-md-6">
+                            <div class="single-product">
+                                <a href="/product/product-details/{{this.slug}}">
+                                    <img class="img-fluid" src="{{getFirstImage this.images}}" alt="{{this.name}}">
+                                </a>
+                                <div class="product-details">
+                                    <h6>{{this.name}}</h6>
+                                    <div class="price">
+                                        <h6>{{formatPrice this.salePrice}}</h6>
+                                        <h6 class="l-through">{{ formatPrice this.originalPrice}}</h6>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {{/each}}
+                    </div>
+                </section>
+                <!-- End Product List -->
+
+                <!-- Start Filter Bar -->
+                <div class="filter-bar d-flex flex-wrap align-items-center">
+                    <div class="sorting mr-auto">
+                        <select id="items-per-page-bottom" onchange="updateItemsPerPage(this.value)">
+                            <option value="12">Show 12</option>
+                            <option value="24">Show 24</option>
+                            <option value="36">Show 36</option>
+                        </select>
+                    </div>
+                    <div class="pagination">
+                        {{#if totalPages}}
+                            {{#if (gt currentPage 1)}}
+                                <a href="#" onclick="changePage({{sub currentPage 1}})" class="prev-arrow"><i class="fa fa-long-arrow-left" aria-hidden="true"></i></a>
+                            {{/if}}
+                            {{#each (createPagination currentPage totalPages)}}
+                                <a href="#" class="{{#ifEquals this ../currentPage}}active{{/ifEquals}}" onclick="changePage({{this}})">{{this}}</a>
+                            {{/each}}
+                            {{#if (lt currentPage totalPages)}}
+                                <a href="#" class="next-arrow" onclick="changePage({{add currentPage 1}})"><i class="fa fa-long-arrow-right" aria-hidden="true"></i></a>
+                            {{/if}}
+                        {{/if}}
+                    </div>
+                </div>
+                <!-- End Filter Bar -->
+            </main>
+        </div>
+    </div>
+
+
+
+    <!-- Start related-product Area -->
+    <section class="related-product-area section_gap">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-6 text-center">
+                    <div class="section-title">
+                        <h1>Deals of the Week</h1>
+                        <p>Our exclusive deal that helps you enjoy life to the fullest and in style!</p>
+                    </div>
+                </div>
+            </div>
+            <!-- Additional content here -->
+           <div class="row">
+                        <div class="col-lg-9">
+                            <div class="row">
+                                {{#each dealProducts}}
+                                <div class="col-lg-4 col-md-4 col-sm-6 mb-20">
+                                    <div class="single-related-product d-flex">
+                                        <a href="/product/product-details/{{this.slug}}">
+                                            <img class="img-fluid" src="{{getFirstImage this.images}}" alt="{{this.name}}" style="max-width: 100px; height: auto;">
+                                        </a>
+                                        <div class="desc">
+                                            <a href="/product/product-details/{{this.slug}}" class="title">{{this.name}}</a>
+                                            <div class="price">
+                                                <h6>{{formatCurrency this.salePrice}}</h6>
+                                                <h6 class="l-through">{{formatCurrency this.originalPrice}}</h6>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {{/each}}
+                            </div>
+                        </div>
+                  
+             
+				<div class="col-lg-3">
+					<div class="ctg-right">
+						<a href="#" target="_blank">
+							<img class="img-fluid d-block mx-auto" src="/img/category/c5.jpg" alt="">
+						</a>
+					</div>
+				</div>
+			</div>
+        </div>
+    </section>
+    <!-- End related-product Area -->
+<script src="/js/filter.js"></script>
+<script src="/js/productDetailClick.js"></script>
+
+
+</body>
+
+ 
