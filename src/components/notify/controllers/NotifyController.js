@@ -1,6 +1,8 @@
 const { mutipleMongooseToObject } = require('@utils/mongoose');
 const redisClient = require('@config/redisClient');
 const notificationService = require('../services/NotificationService')
+const {sendNotification} = require('@/notification');
+
 
 class NotifyController {
     async subscribe(req, res, next) {
@@ -32,10 +34,11 @@ class NotifyController {
             const notificationPayload = {
                 title: 'New Notification',
                 body: 'This is a test notification',
-                icon: 'img/logo.png',
+                icon: '/img/logo.png',
             };
             //Gửi thông báo thử 
-            await notificationService.sendNotification(userId, notificationPayload);
+            //await notificationService.sendNotification(userId, notificationPayload);
+            //await sendNotification('client_notifications', notificationPayload);
             res.status(200).json({});
         } catch (error) {
             console.error('Error in subscribe:', error);

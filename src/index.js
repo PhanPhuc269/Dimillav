@@ -10,7 +10,10 @@ const fs = require('fs');
 const cors = require('cors');
 const mongoose = require('mongoose');
 const MongoStore = require('connect-mongo');
-
+const socket = require('./config/socketService'); 
+const http = require('http');
+const passportSocketIo = require('passport.socketio');
+const { listenForNotifications } = require('./notification');
 
 const session = require('express-session');
 const passport = require('passport');
@@ -23,29 +26,41 @@ const db = require('./config/db');
 db.connect();
 
 const app = express();
+const server = http.createServer(app);
+
 const port = process.env.PORT || 3000;
 
 
 const route = require('./routes');  
-
-sessionMiddleware=session({
+const sessionStore = MongoStore.create({
+  mongoUrl: process.env.MONGODB,
+  client: mongoose.connection.getClient(),
+  collectionName: 'sessions', // Đặt tên collection lưu trữ session
+  ttl: 24 * 60 * 60 // Số giây trong 1 ngày
+});
+const sessionMiddleware = session({
     secret: process.env.MY_SECRET_KEY,
     resave: false,
     saveUninitialized: false,
-    store: MongoStore.create({ client: mongoose.connection.getClient() }),
+    store: sessionStore,
     cookie: {
         httpOnly: true,
         secure: false, // Chỉ dùng với HTTPS
         sameSite: 'lax', // Bảo vệ chống CSRF
-        maxAge: 3600000 // Thời gian sống của session cookie
-    }
+        maxAge: 24 * 60 * 60 * 1000 // Số miligiây trong 1 ngày
+    },
+    key: 'customer.sid'
 })
 app.use(sessionMiddleware);
+
 // Khởi tạo Passport và session
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
 app.use(cors());
+
+socket.init(server, sessionStore); // Khởi tạo Socket.IO
+
 
 // Make flash messages available in templates
 app.use((req, res, next) => {
@@ -63,6 +78,18 @@ app.use(methodOverride('_method'));
 app.use(morgan('combined'));
 
 app.use(express.static(path.join(__dirname, 'public')));
+// Tự động cấu hình các thư mục tĩnh cho các file JavaScript trong các component
+const componentsDir = path.join(__dirname,'components');
+fs.readdirSync(componentsDir).forEach(component => {
+    const componentPath = path.join(componentsDir, component);
+    if (fs.existsSync(componentPath) && fs.lstatSync(componentPath).isDirectory()) {
+        const jsPath = path.join(componentPath, 'js');
+        if (fs.existsSync(jsPath)) {
+            app.use(`/components/${component}/js`, express.static(jsPath));
+        }
+    }
+});
+
 app.use((req, res, next) => {
   if (req.url.endsWith('.css')) {
     res.setHeader('Content-Type', 'text/css');
@@ -93,7 +120,6 @@ app.set('view engine', 'hbs');
 
 let viewPaths = [];
 
-const componentsDir = path.join(__dirname,'components');
 fs.readdirSync(componentsDir).forEach(component => {
     const componentPath = path.join(componentsDir, component);
     if (fs.existsSync(componentPath) && fs.lstatSync(componentPath).isDirectory()) {
@@ -112,7 +138,12 @@ app.set('views', viewPaths);
 
 route(app);
 
-app.listen(port, () => {
+// Lắng nghe thông báo từ khách hàng
+listenForNotifications('admin_notifications', (notification) => {
+  console.log('Notification received from client:', notification);
+});
+
+server.listen(port, () => {
   console.log(`App listening at http://localhost:${port}`);
   createIndex(); // Tạo chỉ mục
   // deleteIndex(); // Xóa chỉ mục (nếu cần)

@@ -2,7 +2,7 @@
 	<header class="header_area sticky-header">
 
 		<div class="main_menu">
-					<!-- Small Navigation Tabs -->
+			<!-- Small Navigation Tabs -->
 			<div class="top_nav navbar navbar-expand-lg navbar-light main_box">
 				<div class="container d-flex justify-content-between">
 					<ul class="nav">
@@ -18,10 +18,16 @@
 							<li class="nav-item submenu dropdown">
 								<a href="#" class="nav-link dropdown-toggle text-normal-case" data-toggle="dropdown" role="button" aria-haspopup="true"
 								aria-expanded="false"><img class="avatar" src="{{user.avatar}}"></img>{{user.username}}</a>
+								<!-- Nút mở chat -->
+								<button type="button" class="btn btn-primary position-fixed bottom-0 end-0 m-3" data-bs-toggle="modal"
+									data-bs-target="#chatModal">
+									<i class="fa-regular fa-comment-dots"></i>
+									Chat
+								</button>
 								<ul class="dropdown-menu avatar-dropdown ">
 									<li class="nav-item"><a class="nav-link" href="/setting/edit-profile">My account</a></li>
 									<li class="nav-item"><a class="nav-link" href="/order/list">Theo dõi đơn hàng</a></li>	
-									<li class="nav-item"><a class="nav-link" href="/logout">Log out</a></li>
+									<li class="nav-item"><a class="nav-link" id="logoutButton" href="/logout">Log out</a></li>
 								</ul>
 							</li>
 						{{else}}
@@ -65,8 +71,32 @@
 				</div>
 			</nav>
 		</div>
-		
-
+		<!-- Modal chat -->
+		<div class="modal fade " id="chatModal" tabindex="-1" data-bs-backdrop="false"  data-bs-keyboard="false" aria-labelledby="chatModalLabel" aria-hidden="true">
+			<div class="modal-dialog modal-sm modal-dialog-scrollable position-fixed bottom-0 end-0 m-3">
+				<div class="modal-content container-sm position-relative" style="top: 38%;">
+					<div class="modal-header p-0">
+						<!-- Thay thế bằng thanh chứa 2 tab -->
+						<ul class="w-100" id="chatTab">
+							<li class=" flex-grow-1">
+								<button class="nav-link w-100 text-left text-black" id="messages-tab" type="button" >Tin nhắn</button>
+							</li>
+							<button type="button" class="btn-close position-absolute top-0 end-0 m-2" data-bs-dismiss="modal"
+								aria-label="Close"></button>
+						</ul>
+					</div>
+					<div class="modal-body">
+						<div class="messages overflow-auto" style="height: 300px;">
+							<!-- Tin nhắn sẽ hiển thị ở đây -->
+							<div class="small p-2 mb-1 rounded-3 bg-body-tertiary">
+								Chào bạn! Tôi có thể giúp gì cho bạn?
+							</div>
+						</div>
+						<input type="text" class="form-control" placeholder="Nhập tin nhắn...">
+					</div>
+				</div>
+			</div>
+		</div>
 
 	</header>
 	  <script src="/js/cart/cart.js" defer></script>
